@@ -33,7 +33,9 @@
 post_compile(_, AppFile) ->
     case lists:suffix("hamcrest.app", AppFile) of
         true ->
-            code:add_patha(filename:join(rebar_config:get_global(base_dir, []), "ebin")),
+            RebarConfig = rebar_config:new(),
+            RebarBaseConfig = rebar_config:base_config(RebarConfig),
+            code:add_patha(filename:join(rebar_config:get_global(RebarBaseConfig, base_dir, ""), "ebin")),
             Exports = [ F || F <- hamcrest_matchers:module_info(exports), 
                              F /= module_info ],
             rebar_log:log(debug, "Adding header exports/imports: ~p~n", [Exports]),
